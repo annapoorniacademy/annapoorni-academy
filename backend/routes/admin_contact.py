@@ -51,6 +51,9 @@ def update_inquiry_status(id):
     data = request.get_json() or {}
 
     if 'status' in data:
+        valid_statuses = ['New', 'Contacted', 'Interested', 'Closed', 'Enrolled']
+        if data['status'] not in valid_statuses:
+            return jsonify({'error': f"Invalid status '{data['status']}'. Must be one of {valid_statuses}"}), 400
         inquiry.status = data['status']
 
     db.session.commit()

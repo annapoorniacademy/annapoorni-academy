@@ -263,7 +263,7 @@ def enroll_course(course_id):
         except Exception:
             pass
 
-    # 2. Attempt dual email dispatch (Outlook SMTP)
+    # 2. Attempt dual email dispatch (Gmail SMTP)
     email_results = send_enrollment_emails(enrollment.to_dict())
     email_delivered = bool(email_results.get('applicant_confirmed') or email_results.get('admin_notified'))
 
@@ -314,7 +314,7 @@ def submit_contact_inquiry():
         except Exception:
             pass
 
-    # 2. Attempt dual email dispatch (Outlook SMTP)
+    # 2. Attempt dual email dispatch (Gmail SMTP)
     email_results = send_contact_inquiry_emails(inquiry.to_dict())
     email_delivered = bool(email_results.get('applicant_confirmed') or email_results.get('admin_notified'))
 

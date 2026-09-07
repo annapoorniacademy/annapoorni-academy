@@ -37,7 +37,6 @@ def create_app(config_name=None):
     allowed_origins = [
         'https://annapoorniacademy.com',
         'https://www.annapoorniacademy.com',
-        'https://annapoorniacademy.netlify.app',
         'http://localhost:5173',
         'http://127.0.0.1:5173',
         'http://localhost:5000',
@@ -62,6 +61,15 @@ def create_app(config_name=None):
 
     # Register error handlers
     register_error_handlers(app)
+
+    # Production Security Headers
+    @app.after_request
+    def set_security_headers(response):
+        response.headers['X-Content-Type-Options'] = 'nosniff'
+        response.headers['X-Frame-Options'] = 'SAMEORIGIN'
+        response.headers['X-XSS-Protection'] = '1; mode=block'
+        response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+        return response
 
     # Register Blueprints
     app.register_blueprint(auth_bp)

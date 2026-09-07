@@ -32,6 +32,9 @@ def update_enrollment_status(id):
     data = request.get_json() or {}
 
     if 'status' in data:
+        valid_statuses = ['New', 'Contacted', 'Interested', 'Enrolled', 'Closed']
+        if data['status'] not in valid_statuses:
+            return jsonify({'error': f"Invalid status '{data['status']}'. Must be one of {valid_statuses}"}), 400
         enrollment.status = data['status']
     if 'notes' in data:
         enrollment.message = data['notes']
