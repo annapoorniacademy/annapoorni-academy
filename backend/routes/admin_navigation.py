@@ -5,6 +5,18 @@ from utils.auth import admin_required
 
 admin_nav_bp = Blueprint('admin_navigation', __name__, url_prefix='/api/admin/navigation')
 
+def is_safe_destination(dest):
+    if not isinstance(dest, str):
+        return False
+    d = dest.strip()
+    # Allow safe relative paths starting with /
+    if d.startswith('/') and not d.startswith('//'):
+        return True
+    # Allow safe external http / https urls
+    if d.startswith('http://') or d.startswith('https://'):
+        return True
+    return False
+
 @admin_nav_bp.route('', methods=['GET'])
 @admin_required()
 def get_all_navigation_items():
@@ -15,15 +27,21 @@ def get_all_navigation_items():
 @admin_required()
 def create_navigation_item():
     data = request.get_json() or {}
-    if not data.get('label') or not data.get('destination'):
+    label = data.get('label', '').strip()
+    destination = data.get('destination', '').strip()
+
+    if not label or not destination:
         return jsonify({'error': 'Label and destination are required'}), 400
 
+    if not is_safe_destination(destination):
+        return jsonify({'error': 'Destination must be a relative path (starting with /) or valid http(s) URL.'}), 400
+
     item = NavigationItem(
-        label=data['label'],
-        destination=data['destination'],
-        display_order=data.get('display_order', 0),
-        is_enabled=data.get('is_enabled', True),
-        is_external=data.get('is_external', False),
+        label=label[:100],
+        destination=destination[:255],
+        display_order=int(data.get('display_order', 0)),
+        is_enabled=bool(data.get('is_enabled', True)),
+        is_external=bool(data.get('is_external', False)),
         location=data.get('location', 'both')
     )
     db.session.add(item)
@@ -38,6 +56,9 @@ def update_navigation_item(item_id):
         return jsonify({'error': 'Navigation item not found'}), 404
 
     data = request.get_json() or {}
+    if 'destination' in data and not is_safe_destination(data['destination']):
+        return jsonify({'error': 'Destination must be a relative path (starting with /) or valid http(s) URL.'}), 400
+
     for f in ['label', 'destination', 'display_order', 'is_enabled', 'is_external', 'location']:
         if f in data:
             setattr(item, f, data[f])

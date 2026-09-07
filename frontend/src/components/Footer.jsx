@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useSiteSettings } from '../context/SiteSettingsContext';
-import { BookOpen, Mail, Phone, MapPin, Instagram, Youtube, Linkedin, Facebook, Twitter, Send } from 'lucide-react';
+import { BookOpen, Mail, Phone, MapPin, MessageCircle, Instagram, Youtube, Linkedin, Facebook, Twitter, Send } from 'lucide-react';
 
 export const Footer = () => {
   const { settings, navigation, socialLinks, contactInfo } = useSiteSettings();
@@ -27,6 +27,9 @@ export const Footer = () => {
     return <Send size={18} />;
   };
 
+  const whatsappNumber = (contactInfo?.whatsapp || contactInfo?.phone || '+919080385589').replace(/[^0-9]/g, '');
+  const displayPhone = contactInfo?.phone || '+91 90803 85589';
+
   return (
     <footer className="footer">
       <div className="container">
@@ -43,7 +46,7 @@ export const Footer = () => {
               )}
               <span>{settings.site_name || 'Annapoorni Academy'}</span>
             </Link>
-            <p>{settings.site_description || 'Annapoorni Academy is an educational platform where users can discover courses, subjects, lessons, and assessments.'}</p>
+            <p>{settings.site_description || 'Annapoorni Academy is a premier educational platform providing Vedic Mathematics, Memory Coaching, and Speed Reading with Coach Sindhu Ram.'}</p>
             
             {/* Social Media Icons */}
             <div className="social-icons-wrapper">
@@ -80,22 +83,23 @@ export const Footer = () => {
 
           {/* Educational Content */}
           <div>
-            <h4>Explore</h4>
+            <h4>Coaching Programs</h4>
             <ul className="footer-links">
-              <li><Link to="/courses">Featured Courses</Link></li>
-              <li><Link to="/subjects">All Subjects</Link></li>
-              <li><Link to="/announcements">Latest News</Link></li>
-              <li><Link to="/about">Academy Overview</Link></li>
+              <li><Link to="/courses">Vedic Mathematics</Link></li>
+              <li><Link to="/courses">Memory Training</Link></li>
+              <li><Link to="/courses">Speed Reading</Link></li>
+              <li><Link to="/announcements">Competitions & News</Link></li>
+              <li><Link to="/about">About Coach Sindhu Ram</Link></li>
             </ul>
           </div>
 
           {/* Contact Details */}
           <div>
-            <h4>Contact Us</h4>
-            <ul className="footer-links" style={{ gap: '1rem' }}>
+            <h4>Contact Details</h4>
+            <ul className="footer-links" style={{ gap: '0.85rem' }}>
               {contactInfo.address && (
                 <li style={{ display: 'flex', gap: '0.6rem', color: 'var(--gray-300)', fontSize: '0.9rem' }}>
-                  <MapPin size={22} style={{ color: 'var(--accent-color)', flexShrink: 0 }} />
+                  <MapPin size={20} style={{ color: 'var(--accent-color)', flexShrink: 0 }} />
                   <span>{contactInfo.address}</span>
                 </li>
               )}
@@ -105,19 +109,23 @@ export const Footer = () => {
                   <a href={`mailto:${contactInfo.email}`}>{contactInfo.email}</a>
                 </li>
               )}
-              {contactInfo.phone && (
+              {displayPhone && (
                 <li style={{ display: 'flex', gap: '0.6rem', color: 'var(--gray-300)', fontSize: '0.9rem' }}>
                   <Phone size={18} style={{ color: 'var(--accent-color)', flexShrink: 0 }} />
-                  <a
-                    href={`https://wa.me/${contactInfo.phone.replace(/[^0-9]/g, '')}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    title="Click to chat on WhatsApp"
-                  >
-                    {contactInfo.phone}
-                  </a>
+                  <a href={`tel:${displayPhone.replace(/\s+/g, '')}`}>{displayPhone}</a>
                 </li>
               )}
+              <li style={{ display: 'flex', gap: '0.6rem', color: 'var(--gray-300)', fontSize: '0.9rem' }}>
+                <MessageCircle size={18} style={{ color: '#25D366', flexShrink: 0 }} />
+                <a
+                  href={`https://wa.me/${whatsappNumber}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: '#25D366', fontWeight: 600 }}
+                >
+                  WhatsApp Chat
+                </a>
+              </li>
             </ul>
           </div>
         </div>

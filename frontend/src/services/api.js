@@ -1,6 +1,8 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://annapoorni-academy-production.up.railway.app';
+// Default to relative paths for single-domain production Cloud Run deployment (annapoorniacademy.com)
+// If VITE_API_BASE_URL is explicitly set during dev/external hosting, it will use that base URL.
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
 
 const API = axios.create({
   baseURL: API_BASE_URL,
@@ -12,7 +14,7 @@ const API = axios.create({
 // Interceptor to attach Admin JWT token to protected requests
 API.interceptors.request.use((config) => {
   const token = localStorage.getItem('admin_token');
-  if (token && config.url.includes('/api/admin')) {
+  if (token && config.url && config.url.includes('/api/admin')) {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;

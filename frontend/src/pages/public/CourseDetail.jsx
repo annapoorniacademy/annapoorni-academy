@@ -1,19 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import api from '../../services/api';
-import { BookOpen, Clock, BarChart, CheckCircle2, UserCheck, Calendar, Sparkles, Send, MessageSquare } from 'lucide-react';
+import API from '../../services/api';
+import { useSiteSettings } from '../../context/SiteSettingsContext';
+import { BookOpen, Clock, BarChart, CheckCircle2, UserCheck, Calendar, Sparkles, Send, MessageSquare, MessageCircle } from 'lucide-react';
 import { EnrollmentModal } from '../../components/EnrollmentModal';
 
 export const CourseDetail = () => {
   const { id } = useParams();
+  const { contactInfo } = useSiteSettings();
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const rawWhatsapp = contactInfo?.whatsapp || contactInfo?.phone || '+919080385589';
+  const whatsappNum = rawWhatsapp.replace(/[^0-9]/g, '');
+  const displayPhone = contactInfo?.phone || '+91 90803 85589';
+
   useEffect(() => {
     const fetchDetail = async () => {
       try {
-        const res = await api.get(`/api/courses/${id}`);
+        const res = await API.get(`/api/courses/${id}`);
         setCourse(res.data);
       } catch (err) {
         console.error(err);
@@ -26,6 +32,8 @@ export const CourseDetail = () => {
 
   if (loading) return <div className="container" style={{ padding: '5rem 0', textAlign: 'center' }}>Loading Course Details...</div>;
   if (!course) return <div className="container" style={{ padding: '5rem 0', textAlign: 'center', color: 'var(--error-color)' }}>Course not found.</div>;
+
+  const whatsappInquiryUrl = `https://wa.me/${whatsappNum}?text=${encodeURIComponent(`Hi Coach Sindhu Ram, I would like details regarding the "${course.title}" program.`)}`;
 
   return (
     <div>
@@ -51,6 +59,7 @@ export const CourseDetail = () => {
 
             <div style={{ display: 'flex', gap: '2rem', fontSize: '0.95rem', marginBottom: '2.5rem', flexWrap: 'wrap' }}>
               <div><BarChart size={16} /> Skill Level: <strong>{course.difficulty || 'All Levels'}</strong></div>
+              <div><Clock size={16} /> Duration: <strong>{course.duration || '4 Weeks'}</strong></div>
               <div><UserCheck size={16} /> Coach: <strong>Sindhu Ram</strong></div>
             </div>
 
@@ -82,14 +91,14 @@ export const CourseDetail = () => {
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.9rem' }}>
                   <CheckCircle2 size={18} style={{ color: 'var(--secondary-color)' }} />
-                  <span>National Competition Prep Support</span>
+                  <span>National Competition Practice Drills</span>
                 </div>
               </div>
 
               <button
                 onClick={() => setIsModalOpen(true)}
                 className="btn btn-primary"
-                style={{ width: '100%', fontSize: '1rem', fontWeight: 700 }}
+                style={{ width: '100%', fontSize: '1rem', fontWeight: 700, justifyContent: 'center' }}
               >
                 Enroll Now <Send size={16} />
               </button>
@@ -144,7 +153,7 @@ export const CourseDetail = () => {
               <div className="glass-card" style={{ padding: '2rem' }}>
                 <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>Live Batch Curriculum Overview</h3>
                 <p style={{ color: 'var(--gray-600)', lineHeight: 1.6 }}>
-                  This course features structured live interactive sessions, hands-on practice worksheets, competition-level speed drills, and direct personalized guidance from Coach Sindhu Ram.
+                  This program features structured live interactive sessions, speed calculation drills, mnemonic strategies, and direct personalized guidance from Coach Sindhu Ram.
                 </p>
               </div>
             )}
@@ -160,19 +169,19 @@ export const CourseDetail = () => {
               <button
                 onClick={() => setIsModalOpen(true)}
                 className="btn btn-primary"
-                style={{ width: '100%', marginBottom: '1rem', fontWeight: 700 }}
+                style={{ width: '100%', marginBottom: '1rem', fontWeight: 700, justifyContent: 'center' }}
               >
                 Enroll Now <Send size={16} />
               </button>
 
               <a
-                href={`https://wa.me/918122795064?text=${encodeURIComponent(`Hi Coach Sindhu Ram, I would like details regarding ${course.title}.`)}`}
+                href={whatsappInquiryUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn btn-outline"
-                style={{ width: '100%', textAlign: 'center', display: 'inline-block' }}
+                style={{ width: '100%', textAlign: 'center', justifyContent: 'center', display: 'flex', alignItems: 'center', gap: '8px' }}
               >
-                💬 Chat on WhatsApp (+91 8122795064)
+                <MessageCircle size={18} color="#25D366" /> Chat on WhatsApp
               </a>
             </div>
           </div>

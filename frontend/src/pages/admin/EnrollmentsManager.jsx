@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import api from '../../services/api';
+import API from '../../services/api';
 import { UserCheck, Search, Filter, MessageSquare, Mail, Phone, Trash2, CheckCircle2, Clock } from 'lucide-react';
 
 export const EnrollmentsManager = () => {
@@ -15,7 +15,7 @@ export const EnrollmentsManager = () => {
       if (search) params.search = search;
       if (statusFilter) params.status = statusFilter;
 
-      const res = await api.get('/api/admin/enrollments', { params });
+      const res = await API.get('/api/admin/enrollments', { params });
       setEnrollments(res.data);
     } catch (err) {
       console.error('Failed to fetch enrollments', err);
@@ -30,7 +30,7 @@ export const EnrollmentsManager = () => {
 
   const handleStatusChange = async (id, newStatus) => {
     try {
-      await api.put(`/api/admin/enrollments/${id}`, { status: newStatus });
+      await API.put(`/api/admin/enrollments/${id}`, { status: newStatus });
       fetchEnrollments();
     } catch (err) {
       alert('Failed to update status.');
@@ -40,10 +40,27 @@ export const EnrollmentsManager = () => {
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this enrollment record?')) return;
     try {
-      await api.delete(`/api/admin/enrollments/${id}`);
+      await API.delete(`/api/admin/enrollments/${id}`);
       fetchEnrollments();
     } catch (err) {
       alert('Failed to delete enrollment.');
+    }
+  };
+
+  const getStatusBadgeStyle = (status) => {
+    switch (status) {
+      case 'new':
+        return { background: '#FEF3C7', color: '#92400E' };
+      case 'contacted':
+        return { background: '#E0F2FE', color: '#075985' };
+      case 'interested':
+        return { background: '#F3E8FF', color: '#6B21A8' };
+      case 'enrolled':
+        return { background: '#D1FAE5', color: '#065F46' };
+      case 'closed':
+        return { background: '#F1F5F9', color: '#475569' };
+      default:
+        return { background: '#F1F5F9', color: '#475569' };
     }
   };
 
@@ -53,17 +70,17 @@ export const EnrollmentsManager = () => {
         <div>
           <h1 style={{ fontSize: '1.75rem', fontWeight: 800 }}>Student Course Enrollments</h1>
           <p style={{ color: 'var(--gray-600)', fontSize: '0.95rem' }}>
-            Manage student batch registrations sent to admin portal & email (shinoansonanand@gmail.com).
+            Manage student batch registrations, learning modes, and enrollment statuses.
           </p>
         </div>
 
-        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
           <div className="search-box" style={{ position: 'relative' }}>
             <Search size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--gray-400)' }} />
             <input
               type="text"
               className="form-control"
-              placeholder="Search by student, email, course..."
+              placeholder="Search student, email, course..."
               style={{ paddingLeft: '2.5rem', width: '260px' }}
               value={search}
               onChange={e => setSearch(e.target.value)}
@@ -72,14 +89,16 @@ export const EnrollmentsManager = () => {
 
           <select
             className="form-control"
-            style={{ width: '160px' }}
+            style={{ width: '170px' }}
             value={statusFilter}
             onChange={e => setStatusFilter(e.target.value)}
           >
             <option value="">All Statuses</option>
-            <option value="new">🆕 New Leads</option>
+            <option value="new">🆕 New</option>
             <option value="contacted">📞 Contacted</option>
+            <option value="interested">⭐ Interested</option>
             <option value="enrolled">✅ Enrolled</option>
+            <option value="closed">📁 Closed</option>
           </select>
         </div>
       </div>
@@ -117,7 +136,7 @@ export const EnrollmentsManager = () => {
 
                   <td style={{ padding: '1rem 1.25rem' }}>
                     <div style={{ fontWeight: 700, fontSize: '1rem' }}>{item.student_name}</div>
-                    <div style={{ display: 'flex', gap: '12px', marginTop: '4px', fontSize: '0.85rem' }}>
+                    <div style={{ display: 'flex', gap: '12px', marginTop: '4px', fontSize: '0.85rem', flexWrap: 'wrap' }}>
                       <a
                         href={`https://wa.me/${item.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(`Hi ${item.student_name}, thank you for inquiring about ${item.course_title} at Annapoorni Academy!`)}`}
                         target="_blank"
@@ -162,18 +181,19 @@ export const EnrollmentsManager = () => {
                       value={item.status}
                       onChange={e => handleStatusChange(item.id, e.target.value)}
                       style={{
-                        padding: '4px 8px',
+                        padding: '6px 10px',
                         borderRadius: '6px',
                         fontSize: '0.85rem',
                         fontWeight: 700,
                         border: '1px solid var(--gray-300)',
-                        background: item.status === 'new' ? '#FEF3C7' : item.status === 'enrolled' ? '#D1FAE5' : '#E0F2FE',
-                        color: item.status === 'new' ? '#92400E' : item.status === 'enrolled' ? '#065F46' : '#075985'
+                        ...getStatusBadgeStyle(item.status)
                       }}
                     >
                       <option value="new">🆕 New</option>
                       <option value="contacted">📞 Contacted</option>
+                      <option value="interested">⭐ Interested</option>
                       <option value="enrolled">✅ Enrolled</option>
+                      <option value="closed">📁 Closed</option>
                     </select>
                   </td>
 

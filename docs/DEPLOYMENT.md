@@ -20,12 +20,12 @@ This guide details how to deploy the **React/Vite Frontend on Netlify** and the 
 | `UPLOAD_FOLDER` | Optional | `uploads` | Path to file uploads directory (e.g. `/tmp/uploads` or persistent storage mount). |
 | `MAX_CONTENT_LENGTH` | Optional | `10485760` (10MB) | Maximum file upload size limit in bytes. |
 | `ADMIN_USERNAME` | Optional | `admin` | Username for initial admin account seeding. |
-| `ADMIN_EMAIL` | Optional | `shinoanson84@gmail.com` | Email for initial admin account seeding. |
+| `ADMIN_EMAIL` | Optional | `annapoorniacademy@gmail.com` | Email for initial admin account seeding. |
 | `ADMIN_PASSWORD` | Optional | `$12345678` | Password for initial admin account seeding. |
 | `MAIL_SERVER` | Optional | `smtp.gmail.com` | SMTP server host for email dispatch. |
 | `MAIL_PORT` | Optional | `587` | SMTP server port. |
-| `MAIL_USERNAME` | Optional | `""` | SMTP sender email username. |
-| `MAIL_PASSWORD` | Optional | `""` | SMTP sender app password. |
+| `MAIL_USERNAME` | Optional | `annapoorniacademy@gmail.com` | SMTP sender email username. |
+| `MAIL_PASSWORD` | Optional | `""` | Google App Password (16 characters, 2FA enabled). |
 
 ---
 

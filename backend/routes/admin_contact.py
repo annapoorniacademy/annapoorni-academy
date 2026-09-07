@@ -14,7 +14,7 @@ def update_contact_settings():
         contact = ContactSetting()
         db.session.add(contact)
 
-    for f in ['email', 'phone', 'address', 'maps_embed_url', 'working_hours', 'contact_form_recipient']:
+    for f in ['email', 'phone', 'whatsapp', 'address', 'maps_embed_url', 'working_hours', 'contact_form_recipient']:
         if f in data:
             setattr(contact, f, data[f])
 

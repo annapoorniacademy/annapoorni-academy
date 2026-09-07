@@ -21,7 +21,7 @@ def seed_database():
     if not Admin.query.first():
         import os
         admin_username = os.environ.get('ADMIN_USERNAME', 'admin')
-        admin_email = os.environ.get('ADMIN_EMAIL', 'shinoanson84@gmail.com')
+        admin_email = os.environ.get('ADMIN_EMAIL', 'annapoorniacademy@gmail.com')
         admin_password = os.environ.get('ADMIN_PASSWORD', '$12345678')
 
         admin = Admin(
@@ -207,12 +207,12 @@ def seed_database():
     # 7. Contact Settings
     if not ContactSetting.query.first():
         contact = ContactSetting(
-            email='shinoanson84@gmail.com',
-            phone='+91 8122795064',
+            email='annapoorniacademy@gmail.com',
+            phone='+91 90803 85589',
             address='Coach Sindhu Ram Academy, Tamil Nadu, India',
             maps_embed_url='https://maps.google.com/maps?q=Annapoorni%20Academy%20Coach%20Sindhu%20Ram&t=&z=15&ie=UTF8&iwloc=&output=embed',
             working_hours='Monday - Saturday: 8:30 AM - 6:30 PM',
-            contact_form_recipient='shinoanson84@gmail.com'
+            contact_form_recipient='annapoorniacademy@gmail.com'
         )
         db.session.add(contact)
 

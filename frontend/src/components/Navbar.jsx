@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useSiteSettings } from '../context/SiteSettingsContext';
-import { Menu, X, BookOpen, Instagram, Youtube, Linkedin, Facebook, Twitter, Send } from 'lucide-react';
+import { Menu, X, BookOpen, Instagram, Youtube, Linkedin, Facebook, Twitter, Send, ArrowRight } from 'lucide-react';
 
 export const Navbar = () => {
   const { settings, navigation, socialLinks } = useSiteSettings();
@@ -65,10 +65,22 @@ export const Navbar = () => {
               </li>
             );
           })}
+          {mobileOpen && (
+            <li style={{ marginTop: '0.5rem' }}>
+              <Link
+                to="/contact"
+                className="btn btn-primary btn-sm"
+                onClick={() => setMobileOpen(false)}
+                style={{ width: '100%', justifyContent: 'center' }}
+              >
+                Enquire Now
+              </Link>
+            </li>
+          )}
         </ul>
 
         {/* Header Social Icons & Actions */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
           <div className="header-social-group" style={{ display: 'flex', gap: '0.5rem' }}>
             {headerSocials.map((soc) => (
               <a
@@ -85,11 +97,19 @@ export const Navbar = () => {
             ))}
           </div>
 
+          <Link
+            to="/contact"
+            className="btn btn-primary btn-sm header-cta-btn"
+            style={{ padding: '0.45rem 0.9rem', fontSize: '0.85rem' }}
+          >
+            Enquire Now <ArrowRight size={14} />
+          </Link>
+
           {/* Mobile Menu Toggle */}
           <button
             className="mobile-menu-btn"
             onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label="Toggle menu"
+            aria-label="Toggle navigation menu"
           >
             {mobileOpen ? <X size={26} /> : <Menu size={26} />}
           </button>
