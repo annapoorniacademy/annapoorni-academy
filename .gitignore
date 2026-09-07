@@ -44,6 +44,7 @@ yarn-error.log*
 
 # Test reports & temp data
 scripts/audit_and_load_results.json
+scripts/*.json
 
 # IDE / OS
 .vscode/
