@@ -141,7 +141,7 @@ FIRESTORE_PROJECT_ID=annapoorni-academy-prod,\
 DB_TYPE=firestore,\
 STORAGE_BUCKET=annapoorni-academy-media,\
 ADMIN_USERNAME=admin,\
-ADMIN_EMAIL=annapoorniacademy@gmail.com,\
+ADMIN_EMAIL=coach.sindhuram@gmail.com,\
 ADMIN_PASSWORD=YOUR_STRONG_ADMIN_PASSWORD,\
 FRONTEND_URL=https://annapoorniacademy.com"
 ```
@@ -207,7 +207,7 @@ To guarantee that costs remain near ₹0 and protect against unintended spikes:
    - Name: `Academy-Zero-Cost-Guard`.
    - Target Amount: **₹100 INR** (or $2.00 USD).
    - Trigger Thresholds: 50%, 90%, and 100%.
-   - Notification: Email alerts to `annapoorniacademy@gmail.com`.
+   - Notification: Email alerts to `coach.sindhuram@gmail.com`.
 2. **Cloud Run Limits**:
    - `--max-instances 2` ensures traffic spikes cannot spawn dozens of containers.
    - `--min-instances 0` ensures idle periods cost ₹0.

@@ -75,7 +75,7 @@ class AnnapoorniAcademyTestSuite(unittest.TestCase):
         calls = mock_send_email.call_args_list
         admin_call = next((c for c in calls if 'New Contact Inquiry' in c.kwargs.get('subject', '')), None)
         self.assertIsNotNone(admin_call, "Academy notification email must be triggered")
-        self.assertIn('annapoorniacademy@gmail.com', admin_call.kwargs.get('to_email'))
+        self.assertIn('coach.sindhuram@gmail.com', admin_call.kwargs.get('to_email'))
         self.assertEqual(admin_call.kwargs.get('reply_to'), 'ramesh.kumar@example.com')
 
     @patch('services.email_service.send_email')
@@ -139,7 +139,7 @@ class AnnapoorniAcademyTestSuite(unittest.TestCase):
         calls = mock_send_email.call_args_list
         admin_call = next((c for c in calls if 'New Enrollment Application' in c.kwargs.get('subject', '')), None)
         self.assertIsNotNone(admin_call)
-        self.assertIn('annapoorniacademy@gmail.com', admin_call.kwargs.get('to_email'))
+        self.assertIn('coach.sindhuram@gmail.com', admin_call.kwargs.get('to_email'))
         self.assertEqual(admin_call.kwargs.get('reply_to'), 'kavita.sundar@example.com')
 
     @patch('services.email_service.send_email')
@@ -170,7 +170,7 @@ class AnnapoorniAcademyTestSuite(unittest.TestCase):
         mock_smtp.side_effect = Exception("Connection to smtp.gmail.com timed out")
         
         with patch.dict(os.environ, {
-            'MAIL_USERNAME': 'annapoorniacademy@gmail.com',
+            'MAIL_USERNAME': 'coach.sindhuram@gmail.com',
             'MAIL_PASSWORD': 'test_mock_password'
         }):
             res = self.client.post('/api/contact/inquiry', json={
@@ -211,9 +211,9 @@ class AnnapoorniAcademyTestSuite(unittest.TestCase):
         self.assertNotIn('password', settings_str)
 
     def test_09_email_sender_is_always_official_gmail(self):
-        """Test 9: Official sender identity is always annapoorniacademy@gmail.com"""
+        """Test 9: Official sender identity is always coach.sindhuram@gmail.com"""
         config = _get_email_config()
-        self.assertEqual(config['official_email'], 'annapoorniacademy@gmail.com')
+        self.assertEqual(config['official_email'], 'coach.sindhuram@gmail.com')
         
         with patch('smtplib.SMTP') as mock_smtp_class:
             mock_server = MagicMock()
@@ -226,7 +226,7 @@ class AnnapoorniAcademyTestSuite(unittest.TestCase):
                 )
                 # Verify sendmail envelope sender
                 args, _ = mock_server.sendmail.call_args
-                self.assertEqual(args[0], 'annapoorniacademy@gmail.com')
+                self.assertEqual(args[0], 'coach.sindhuram@gmail.com')
 
     def test_10_applicant_email_used_as_reply_to(self):
         """Test 10: Applicant email is set as Reply-To on academy notifications"""
@@ -235,7 +235,7 @@ class AnnapoorniAcademyTestSuite(unittest.TestCase):
             mock_smtp_class.return_value = mock_server
             with patch.dict(os.environ, {'MAIL_PASSWORD': 'dummy'}):
                 send_email(
-                    to_email='annapoorniacademy@gmail.com',
+                    to_email='coach.sindhuram@gmail.com',
                     subject='Inquiry from Student',
                     body_html='<p>Body</p>',
                     reply_to='student.applicant@example.com'

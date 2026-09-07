@@ -52,7 +52,7 @@ VALUES
 
 -- Contact Settings
 INSERT INTO contact_settings (email, phone, whatsapp, address, working_hours, contact_form_recipient)
-VALUES ('annapoorniacademy@gmail.com', '+91 90803 85589', '+919080385589', 'Coach Sindhu Ram Academy, Tamil Nadu, India', 'Monday - Saturday: 8:30 AM - 6:30 PM', 'annapoorniacademy@gmail.com');
+VALUES ('coach.sindhuram@gmail.com', '+91 90803 85589', '+919080385589', 'Coach Sindhu Ram Academy, Tamil Nadu, India', 'Monday - Saturday: 8:30 AM - 6:30 PM', 'coach.sindhuram@gmail.com');
 
 -- SEO Settings
 INSERT INTO seo_settings (site_title, meta_description, keywords, og_title, og_description)

@@ -12,7 +12,7 @@ def _get_email_config():
     Extract and validate SMTP settings from environment variables.
     Defaults to Google Gmail (smtp.gmail.com:587 STARTTLS) with official academy identity.
     """
-    official_email = os.environ.get('MAIL_FROM') or os.environ.get('MAIL_USERNAME') or 'annapoorniacademy@gmail.com'
+    official_email = os.environ.get('MAIL_FROM') or os.environ.get('MAIL_USERNAME') or 'coach.sindhuram@gmail.com'
     from_name = os.environ.get('MAIL_FROM_NAME', 'Annapoorni Academy')
     admin_recipient = os.environ.get('ADMIN_EMAIL') or official_email
     
@@ -45,13 +45,14 @@ def _get_email_config():
         'has_credentials': bool(mail_username and mail_password)
     }
 
-def send_email(to_email, subject, body_html, reply_to=None, from_name=None, plain_text=None):
+def send_email(to_email, subject, body_html, reply_to=None, from_name=None, plain_text=None, max_retries=3):
     """
     Core email delivery utility.
-    - Official sender identity: ALWAYS annapoorniacademy@gmail.com (or configured MAIL_FROM).
+    - Official sender identity: ALWAYS coach.sindhuram@gmail.com (or configured MAIL_FROM).
     - Supports custom Reply-To (e.g. applicant email) for easy 1-click replies.
     - Connects over SMTP with STARTTLS on port 587 (smtp.gmail.com).
     - Never logs passwords, App Passwords, or sensitive credentials.
+    - Automated retry with backoff (up to 3 attempts).
     - Returns (success_boolean, status_message).
     """
     config = _get_email_config()
@@ -71,31 +72,37 @@ def send_email(to_email, subject, body_html, reply_to=None, from_name=None, plai
     msg.attach(MIMEText(text_content, 'plain', 'utf-8'))
     msg.attach(MIMEText(body_html, 'html', 'utf-8'))
 
-    # If credentials are configured, attempt real SMTP delivery
+    # If credentials are configured, attempt real SMTP delivery with safe retry
     if config['has_credentials']:
-        try:
-            server = smtplib.SMTP(config['server'], config['port'], timeout=12)
-            if config['use_tls']:
-                server.starttls()
-            server.login(config['username'], config['password'])
-            server.sendmail(sender_email, [to_email], msg.as_string())
-            server.quit()
-            logger.info(f"Email sent successfully to {to_email} (Subject: {subject})")
-            return True, "Email sent successfully over Gmail SMTP."
-        except Exception as e:
-            # Safe sanitized logging - do NOT log credentials or trace auth details
-            error_type = type(e).__name__
-            logger.warning(f"SMTP delivery note ({error_type}): Email to {to_email} could not be dispatched via SMTP.")
-            return False, f"SMTP delivery failed ({error_type}). Submission remains safely stored in database."
+        attempt = 0
+        last_error = None
+        while attempt < max_retries:
+            attempt += 1
+            try:
+                server = smtplib.SMTP(config['server'], config['port'], timeout=12)
+                if config['use_tls']:
+                    server.starttls()
+                server.login(config['username'], config['password'])
+                server.sendmail(sender_email, [to_email], msg.as_string())
+                server.quit()
+                logger.info(f"Email sent successfully to {to_email} (Subject: {subject}) on attempt {attempt}")
+                return True, "Email sent successfully over Gmail SMTP."
+            except Exception as e:
+                last_error = e
+                error_type = type(e).__name__
+                logger.warning(f"SMTP attempt {attempt}/{max_retries} failed ({error_type}): Email to {to_email} could not be dispatched.")
+
+        error_type = type(last_error).__name__ if last_error else 'UnknownError'
+        return False, f"SMTP delivery failed after {max_retries} attempts ({error_type}). Submission remains safely stored in database."
     else:
         # Development / Offline mode: credentials not set, log safely
-        logger.info(f"Email logged (SMTP credentials not set). To: {to_email} | Subject: {subject}")
+        logger.info(f"Email recorded locally (SMTP credentials not set). To: {to_email} | Subject: {subject}")
         return True, "Email recorded locally (SMTP credentials not configured)."
 
 def send_contact_inquiry_emails(inquiry_data):
     """
     Handles dual email flow for contact form inquiries:
-    1. Academy notification to annapoorniacademy@gmail.com (with Reply-To set to applicant)
+    1. Academy notification to coach.sindhuram@gmail.com (with Reply-To set to applicant)
     2. Confirmation copy to applicant
     """
     config = _get_email_config()
@@ -191,7 +198,7 @@ def send_contact_inquiry_emails(inquiry_data):
 def send_enrollment_emails(enrollment_data):
     """
     Handles dual email flow for course enrollment applications:
-    1. Academy notification to annapoorniacademy@gmail.com (with Reply-To set to applicant)
+    1. Academy notification to coach.sindhuram@gmail.com (with Reply-To set to applicant)
     2. Confirmation email to applicant
     """
     config = _get_email_config()

@@ -89,13 +89,13 @@ CREATE TABLE IF NOT EXISTS social_links (
 
 CREATE TABLE IF NOT EXISTS contact_settings (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    email VARCHAR(120) DEFAULT 'annapoorniacademy@gmail.com',
+    email VARCHAR(120) DEFAULT 'coach.sindhuram@gmail.com',
     phone VARCHAR(50) DEFAULT '+91 90803 85589',
     whatsapp VARCHAR(50) DEFAULT '+919080385589',
     address TEXT,
     maps_embed_url TEXT,
     working_hours VARCHAR(150),
-    contact_form_recipient VARCHAR(120) DEFAULT 'annapoorniacademy@gmail.com',
+    contact_form_recipient VARCHAR(120) DEFAULT 'coach.sindhuram@gmail.com',
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 

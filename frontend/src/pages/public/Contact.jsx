@@ -19,7 +19,7 @@ export const Contact = () => {
 
   const whatsappNum = (contactInfo?.whatsapp || contactInfo?.phone || '+919080385589').replace(/[^0-9]/g, '');
   const displayPhone = contactInfo?.phone || '+91 90803 85589';
-  const displayEmail = contactInfo?.email || 'annapoorniacademy@gmail.com';
+  const displayEmail = contactInfo?.email || 'coach.sindhuram@gmail.com';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
