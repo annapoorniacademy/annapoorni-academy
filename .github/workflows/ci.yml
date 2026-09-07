@@ -54,3 +54,14 @@ jobs:
         run: |
           cd frontend
           npm run build
+
+  validate-docker:
+    name: Docker Production Image Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Build Production Docker Image
+        run: |
+          docker build -t annapoorni-academy:ci .
