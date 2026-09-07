@@ -1,0 +1,51 @@
+﻿# Version Control & CI/CD
+.git
+.gitignore
+.github
+
+# Environment Variables & Secrets
+.env
+.env.*
+!.env.example
+
+# Node / Frontend Build Cache
+frontend/node_modules
+frontend/dist
+frontend/.npm
+frontend/*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python Virtual Environments & Bytecode
+backend/venv
+backend/.venv
+venv
+.venv
+env
+ENV
+__pycache__
+*.py[cod]
+*$py.class
+*.pytest_cache
+.coverage
+htmlcov
+
+# Local Databases & Media Uploads
+backend/*.db
+backend/*.sqlite
+backend/*.sqlite3
+*.db
+*.sqlite
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# Testing Scripts & Reports
+scripts/audit_and_load_results.json
+
+# IDE & OS Artifacts
+.vscode
+.idea
+*.sublime-workspace
+.DS_Store
+Thumbs.db
